@@ -1,20 +1,141 @@
 require 'csv'
+$NOMEARQUIVO = "dicionario.csv"
+$HTML_SEP = "&#44;"
+$CHAR_SEP = ","
 
 	#Listar todas as palavras do dicionario
-	def ListaPalavras (arrayDicionario)
-		tam = arrayDicionario.size
+	#def ListaPalavras (arrayDicionario)
+    #		tam = arrayDicionario.size
+	#end
+
+	
+	def getPalavraExiste(pPalavra)
+		_linha = 0
+		pPalavra= pPalavra.upcase
+
+		CSV.foreach($NOMEARQUIVO) do |row| 
+			if _linha == 0 
+				_linha= _linha + 1
+				next
+			end
+			if row[0].upcase == pPalavra
+				return true
+			end
+		end
+
+		return false
 	end
 
-	#Menu
+	def Continuar
+		print "Pressione qualquer tecla para continuar..."
+		gets.chomp
+	end
+
+	def addSignificado
+		_palavra = " "		
+		while _palavra.length != 0 do
+			print "Informe a palavra (Deixe em branco para cancelar): "
+			_palavra = gets.chomp
+
+			if _palavra.length == 0 
+				break
+			end
+
+			if getPalavraExiste(_palavra)
+			   puts ""
+			   puts "A palavra jah existe no dicionario."
+			   Continuar()
+			   next
+			end
+
+			print "Informe o significado: "
+			_significado = gets.chomp
+			if _significado.include? $CHAR_SEP
+				_significado[$CHAR_SEP] = $HTML_SEP
+			end
+
+
+			arquivo = File.open($NOMEARQUIVO, "a+")
+			arquivo.puts _palavra + $CHAR_SEP + _significado 
+			arquivo.close()
+
+			puts ""
+			puts "Palavra adicionada com sucesso."
+			Continuar()
+
+			break
+
+		end			
+
+	end
+
+	def listarPalavra
+		_palavra = " "		
+		while _palavra.length != 0 do
+			_linha = 0
+			print "Informe a palavra (Deixe em branco para cancelar): "
+			_palavra = gets.chomp
+
+			if _palavra.length == 0 
+				break
+			end
+
+			_palavra= _palavra.upcase
+			_total  = 0
+
+			puts "-----------------------------------------"
+			CSV.foreach($NOMEARQUIVO) do |row| 
+				if _linha == 0 
+					_linha= _linha + 1
+					next
+				end
+				if row[0].upcase.start_with? _palavra					
+					
+					_significado = row[1]
+					if _significado.include? $HTML_SEP
+					   _significado[$HTML_SEP] = $CHAR_SEP
+					end
+
+					puts ('%-12.3s' % row[0]) +  _significado
+
+					_total = _total + 1
+				end
+
+			end
+
+			puts "-----------------------------------------"
+			puts "Total de palavras encontradas: " + _total.to_s
+			puts ""
+			Continuar()
+
+			break
+
+		end			
+
+	end
+
 	def Menu
-		puts "Digite uma opcao: "
-		opcao = gets
-		opcao.to_i
+		puts "Dicionario Espanhol"
+		puts "======================================="
+		puts "Opcoes:"
+		puts "1-Incluir palavra e significado;"
+		puts "2-Pesquisar palavra em Espanhol;"
+		puts "3-Alterar significado da palavra;"
+		puts "4-Excluir palavra;"
+		puts "5-Listar todo o conteudo do dicionario;"
+		puts "6-Exportar dicionario para CSV e"
+		puts "Qualquer outra tecla-Sair"
+		puts "======================================="
+
+
+		print "Digite uma opcao: "; opcao = gets.chomp; print "\n";
+		opcao = opcao.to_i
 
 		if opcao == 1
-			
-		elsif opcao == 2
+			addSignificado
 
+		elsif opcao == 2
+			listarPalavra
 
 		elsif opcao == 3
 			
@@ -26,15 +147,19 @@ require 'csv'
 					
 
 		elsif opcao == 6
-						
 
+		else
+			return false;
 		end
+
+		return true;
 	end
 
-
 	# Criacao e escrita do arquivo
-	arquivo = File.open("dicionario.csv", "a+")
-		arquivo.puts 'pt,es'
+	
+	if !File.exists?($NOMEARQUIVO)
+		arquivo = File.open($NOMEARQUIVO, "a+")
+		arquivo.puts 'palavra,significado'
 		arquivo.puts 'Agulha,aguja'
 		arquivo.puts 'Alfinete,alfiler'
 		arquivo.puts 'Anel,anillo'
@@ -171,11 +296,17 @@ require 'csv'
 		arquivo.puts 'Xarope,jarabe'
 		arquivo.puts 'Ziper,cremallera'
 		arquivo.puts 'Zarabatana,soplete'
-
-	#Carrega array com os dados do dicionario
-	arrayString = []
-	CSV.foreach('dicionario.csv') do |row| 
-		arrayString.push(row)
+		arquivo.close();
 	end
 
-	Menu()
+	#Carrega array com os dados do dicionario
+	#arrayString = []
+	#CSV.foreach('dicionario.csv') do |row| 
+	#		arrayString.push(row)
+	#end
+
+	system "clear"
+	while Menu() do
+		system "clear"
+		## continua ateh o 9 ser pressionado!
+	end
