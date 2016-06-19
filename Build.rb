@@ -1,6 +1,38 @@
 require 'csv'
 
-# Criacao e escrita do arquivo
+	#Listar todas as palavras do dicionario
+	def ListaPalavras (arrayDicionario)
+		tam = arrayDicionario.size
+	end
+
+	#Menu
+	def Menu
+		puts "Digite uma opcao: "
+		opcao = gets
+		opcao.to_i
+
+		if opcao == 1
+			
+		elsif opcao == 2
+
+
+		elsif opcao == 3
+			
+		
+		elsif opcao == 4
+
+
+		elsif opcao == 5
+					
+
+		elsif opcao == 6
+						
+
+		end
+	end
+
+
+	# Criacao e escrita do arquivo
 	arquivo = File.open("dicionario.csv", "a+")
 		arquivo.puts 'pt,es'
 		arquivo.puts 'Agulha,aguja'
@@ -147,34 +179,3 @@ require 'csv'
 	end
 
 	Menu()
-
-	#Listar todas as palavras do dicionario
-	def ListaPalavras (arrayDicionario)
-		tam = arrayDicionario.size
-	end
-
-	#Menu
-	def Menu
-		puts Digite uma opcaon
-		opcao = gets
-		opcao.to_i
-
-		if opcao == 1
-			
-		elsif opcao == 2
-
-
-		elsif opcao == 3
-			
-		
-		elsif opcao == 4
-
-
-		elsif opcao == 5
-					
-
-		elsif opcao == 6
-						
-
-		end
-	end
