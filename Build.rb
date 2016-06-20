@@ -167,6 +167,46 @@ $CHAR_SEP = ","
 
 	end
 
+	def removerPalavra
+		_palavra = " "		
+		while _palavra.length != 0 do
+			print "Informe a palavra (Deixe em branco para cancelar): "
+			_palavra = gets.chomp
+
+			if _palavra.length == 0 
+				break
+			end
+
+			if !getPalavraExiste(_palavra)
+				puts "Palavra nao encontrada."
+				next
+			end
+
+			_palavra= _palavra.upcase
+
+			_array = []
+			CSV.foreach($NOMEARQUIVO) do |row| 
+			  _array.push(row)
+			end
+
+			CSV.open($NOMEARQUIVO, "wb") do |csv|
+			  for row in _array
+			  	if row[0].upcase != _palavra
+			  	  csv << row
+			  	end
+			  end
+			end
+
+			puts ""
+			puts "Palavra removida com sucesso."
+			Continuar()
+
+			break
+
+		end	
+
+	end
+
 	def Menu
 		puts "Dicionario Espanhol"
 		puts "======================================="
@@ -194,6 +234,7 @@ $CHAR_SEP = ","
 			alterarSignificado
 		
 		elsif opcao == 4
+			removerPalavra
 
 
 		elsif opcao == 5
