@@ -124,32 +124,42 @@ $CHAR_SEP = ","
 				break
 			end
 
-			if getPalavraExiste(_palavra) == false
-			   puts ""
-			   puts "Palavra nao esta no dicionario"
-			   Continuar()
-			   next
+			_palavra= _palavra.upcase
+
+			_significado = ""
+
+			_array = []
+			puts $NOMEARQUIVO
+			CSV.foreach($NOMEARQUIVO) do |row| 
+			  _array.push(row)
 			end
 
-			CSV.foreach($NOMEARQUIVO) do |row| 
-				if getPalavraExiste(_palavra) 
-				   print "Informe o novo significado: "
-				   _significado = gets.chomp
+			for row in _array
+				if row[0].upcase == _palavra				   
+				   
+				   _significado= row[1]
+				   puts "Significado atual: " + _significado				   
+				   print "Altere o significado: "
+				   _significado = gets.chomp(_significado)
+
 				   if _significado.include? $CHAR_SEP
 				      _significado[$CHAR_SEP] = $HTML_SEP
-				      row[1]=_significado
-				      break
 				   end		
+
+				   row[1]= _significado
+				   
+				   break
 				end
 			end
 
-			
-			arquivo = File.open($NOMEARQUIVO, "a+")
-			arquivo.puts _palavra + $CHAR_SEP + _significado 
-			arquivo.close()
+			CSV.open($NOMEARQUIVO, "wb") do |csv|
+			  for row in _array
+			  	csv << row
+			  end
+			end
 
 			puts ""
-			puts "Significado com sucesso."
+			puts "Significado alterado com sucesso."
 			Continuar()
 
 			break
