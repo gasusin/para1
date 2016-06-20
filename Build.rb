@@ -129,7 +129,6 @@ $CHAR_SEP = ","
 			_significado = ""
 
 			_array = []
-			puts $NOMEARQUIVO
 			CSV.foreach($NOMEARQUIVO) do |row| 
 			  _array.push(row)
 			end
