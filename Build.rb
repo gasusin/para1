@@ -96,7 +96,7 @@ $CHAR_SEP = ","
 					   _significado[$HTML_SEP] = $CHAR_SEP
 					end
 
-					puts ('%-12.3s' % row[0]) +  _significado
+					puts ('%-12s' % row[0]) +  _significado
 
 					_total = _total + 1
 				end
@@ -111,6 +111,50 @@ $CHAR_SEP = ","
 			break
 
 		end			
+
+	end
+
+	def alterarSignificado
+		_palavra = " "		
+		while _palavra.length != 0 do
+			print "Informe a palavra (Deixe em branco para cancelar): "
+			_palavra = gets.chomp
+
+			if _palavra.length == 0 
+				break
+			end
+
+			if getPalavraExiste(_palavra) == false
+			   puts ""
+			   puts "Palavra nao esta no dicionario"
+			   Continuar()
+			   next
+			end
+
+			CSV.foreach($NOMEARQUIVO) do |row| 
+				if getPalavraExiste(_palavra) 
+				   print "Informe o novo significado: "
+				   _significado = gets.chomp
+				   if _significado.include? $CHAR_SEP
+				      _significado[$CHAR_SEP] = $HTML_SEP
+				      row[1]=_significado
+				      break
+				   end		
+				end
+			end
+
+			
+			arquivo = File.open($NOMEARQUIVO, "a+")
+			arquivo.puts _palavra + $CHAR_SEP + _significado 
+			arquivo.close()
+
+			puts ""
+			puts "Significado com sucesso."
+			Continuar()
+
+			break
+
+		end	
 
 	end
 
@@ -138,7 +182,7 @@ $CHAR_SEP = ","
 			listarPalavra
 
 		elsif opcao == 3
-			
+			alterarSignificado
 		
 		elsif opcao == 4
 
@@ -308,5 +352,6 @@ $CHAR_SEP = ","
 	system "clear"
 	while Menu() do
 		system "clear"
+
 		## continua ateh o 9 ser pressionado!
 	end
